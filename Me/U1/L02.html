@@ -3,197 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extract Path Link</title>
+    <title>Media Player with Links</title>
     <style>
-        /* Reset some default styles for cleaner appearance */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: top;
-            justify-content: top;
-            min-height: 100vh;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Set background color to black */
+            color: #fff; /* Set text color to white for better visibility */
             text-align: center;
+            margin: 0;
+            padding: 20px;
         }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #333;
+        .player-container {
+            margin: 20px auto;
+            max-width: 800px;
         }
-
-        /* Hide the link display */
-        #path-link {
-            display: none;
-        }
-
-        /* Style for iframe container */
-        #iframe-container {
-            width: 100%;
-            max-width: 100%;
-            height: 250px; /* Fixed height for rectangular shape */
-            margin-top: 20px;
-            background-color: #fff;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
         iframe {
             width: 100%;
-            height: 100%;
-            border-radius: 8px;
+            height: 300px;
             border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
-
-        /* General button style */
-        .btn {
-            padding: 12px 25px;
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
             background-color: #007bff;
             color: white;
             border: none;
+            padding: 10px 20px;
+            margin: 5px;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 10px;
+            transition: background-color 0.3s;
         }
-
-        /* Button hover effect */
-        .btn:hover {
+        button:hover {
             background-color: #0056b3;
-        }
-
-        /* Style for the button container */
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        /* Fullscreen button specific style */
-        #fullscreen-btn {
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Mechanical: Unit 1 lecture 1</h1>
-    <!-- Full link display is hidden -->
-    <pre id="path-link">Loading...</pre>
-    <div id="iframe-container"></div> <!-- Container for iframe -->
-
-    <!-- Fullscreen button -->
-    <button id="fullscreen-btn" class="btn" style="display: none;">Go Fullscreen</button>
-
-    <!-- Button container for notes and DPP -->
-    <div class="btn-container">
-        <button id="notes-btn" class="btn" style="display: none;">Open Notes</button>
-        <button id="dpp-btn" class="btn" style="display: none;">Open DPP</button>
+    <h1>Mechanical : Unit 1 lec 1</h1>
+    <div class="player-container">
+        <iframe id="videoFrame" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+    <div class="buttons">
+        <button onclick="openLink('notes')">Notes</button>
+        <button onclick="openLink('dpp')">DPP</button>
     </div>
 
     <script>
-        // Links declared as variables for easy replacement
-        const baseLink = 'https://u.pcloud.link/publink/show?code=XZ9LU55Zh3Spos9PjPSbRNtomDREFkoW9gQy';
-        const notesLink = 'notes.pdf';
-        const dppLink = 'https://dark-shadowblade.github.io/NoDpp/';
+        // Define links as constants
+        const links = {
+            iframe: 'https://drive.google.com/file/d/1lskpY0mG4VobQzPrirFBNUYc-Qte4NLS/preview', // Video URL
+            notes: 'notes.pdf', // Replace with the actual URL or path for notes
+            dpp: 'dpp.pdf'     // Replace with the actual URL or path for dpp
+        };
 
-        async function fetchHTML() {
-            try {
-                // Fetch the HTML content from the URL
-                const response = await fetch(baseLink);
-                if (!response.ok) throw new Error('Failed to fetch HTML content');
-                const htmlText = await response.text();
+        // Set the iframe source dynamically
+        document.getElementById('videoFrame').src = links.iframe;
 
-                // Parse the HTML to extract the publinkData variable containing the path
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlText, 'text/html');
-
-                // Find the script tag containing the publinkData
-                const scriptTags = doc.querySelectorAll('script');
-                let publinkDataScript = '';
-
-                scriptTags.forEach(script => {
-                    if (script.textContent.includes('publinkData')) {
-                        publinkDataScript = script.textContent;
-                    }
-                });
-
-                if (publinkDataScript) {
-                    // Extract the JSON-like object from the script
-                    const dataMatch = publinkDataScript.match(/var publinkData = ({.*?});/s);
-                    if (dataMatch && dataMatch[1]) {
-                        const publinkData = JSON.parse(dataMatch[1]);
-                        if (publinkData && publinkData.variants && publinkData.variants[0]) {
-                            const pathLink = publinkData.variants[0].path;
-
-                            // Declare the base URL
-                            const baseURL = 'https://p-def6.pcloud.com';
-
-                            // Combine the base URL and pathLink
-                            const fullLink = baseURL + pathLink;
-
-                            // Create an iframe and set its source to the fullLink
-                            const iframe = document.createElement('iframe');
-                            iframe.src = fullLink;
-
-                            // Append the iframe to the container
-                            document.getElementById('iframe-container').appendChild(iframe);
-
-                            // Show the fullscreen and file buttons
-                            const fullscreenBtn = document.getElementById('fullscreen-btn');
-                            const notesBtn = document.getElementById('notes-btn');
-                            const dppBtn = document.getElementById('dpp-btn');
-                            fullscreenBtn.style.display = 'inline-block';
-                            notesBtn.style.display = 'inline-block';
-                            dppBtn.style.display = 'inline-block';
-
-                            // Toggle fullscreen mode when the button is clicked
-                            fullscreenBtn.addEventListener('click', () => {
-                                if (iframe.requestFullscreen) {
-                                    iframe.requestFullscreen();
-                                } else if (iframe.mozRequestFullScreen) { // Firefox
-                                    iframe.mozRequestFullScreen();
-                                } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari
-                                    iframe.webkitRequestFullscreen();
-                                } else if (iframe.msRequestFullscreen) { // IE/Edge
-                                    iframe.msRequestFullscreen();
-                                }
-                            });
-
-                            // Open Notes PDF when the Notes button is clicked
-                            notesBtn.addEventListener('click', () => {
-                                window.open(notesLink, '_blank');
-                            });
-
-                            // Open DPP PDF when the DPP button is clicked
-                            dppBtn.addEventListener('click', () => {
-                                window.open(dppLink, '_blank');
-                            });
-
-                        } else {
-                            document.getElementById('path-link').textContent = 'Error: Path not found in the data';
-                        }
-                    } else {
-                        document.getElementById('path-link').textContent = 'Error: Could not find publinkData object';
-                    }
-                } else {
-                    document.getElementById('path-link').textContent = 'Error: publinkData script not found';
-                }
-            } catch (error) {
-                document.getElementById('path-link').textContent = 'Error: ' + error.message;
+        // Function to open the link
+        function openLink(type) {
+            if (links[type]) {
+                window.open(links[type], '_blank');
+            } else {
+                alert('Invalid link');
             }
         }
-
-        fetchHTML();
     </script>
 </body>
 </html>
