@@ -1,3 +1,10 @@
+// Define the subject (change this to update across all pages)
+const SUBJECT = "Maths-II"; // Example subject, change it as needed
+
+// Update the subject name in the title and heading
+document.getElementById('page-title').textContent = `${SUBJECT}: Unit 1 Lecture 1`;
+document.getElementById('subject-name').textContent = SUBJECT;
+
 async function fetchHTML() {
     try {
         const baseLink = document.getElementById('lecture-link').href;
@@ -31,15 +38,12 @@ async function fetchHTML() {
                     iframe.src = fullLink;
                     iframeContainer.appendChild(iframe);
 
-                    // Show buttons
                     document.getElementById('fullscreen-btn').style.display = 'inline-block';
                     document.getElementById('notes-btn').style.display = 'inline-block';
                     document.getElementById('dpp-btn').style.display = 'inline-block';
 
-                    // Fullscreen functionality
                     document.getElementById('fullscreen-btn').onclick = () => iframe.requestFullscreen?.();
 
-                    // Handle button clicks (Notes and DPP)
                     document.querySelectorAll('.btn').forEach(button => {
                         button.onclick = () => {
                             const link = button.getAttribute('data-link');
