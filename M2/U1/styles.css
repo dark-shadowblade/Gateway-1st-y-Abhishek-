@@ -1,80 +1,117 @@
-    <style>
-        /* Reset some default styles for clean appearance */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* Reset default styles for a clean look */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: top;
-            justify-content: top;
-            min-height: 100vh;
-            padding: 20px;
-            text-align: center;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+}
 
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #333;
-        }
+/* Header styling */
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
 
-        /* Hide the link display */
-        #path-link {
-            display: none;
-        }
+/* Hide the extracted path text */
+#path-link {
+    display: none;
+}
 
-        /* Style for iframe container */
-        #iframe-container {
-            width: 100%;
-            max-width: 100%;
-            height: 250px; /* Fixed height for rectangular shape */
-            margin-top: 20px;
-            background-color: #fff;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* Container for the embedded lecture video */
+#iframe-container {
+    width: 100%;
+    max-width: 800px;
+    height: 450px; /* Adjusted for better visibility */
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            border: none;
-        }
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 
-        /* General button style */
-        .btn {
-            padding: 12px 25px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 10px;
-        }
+/* General button styles */
+.btn {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
 
-        /* Button hover effect */
-        .btn:hover {
-            background-color: #0056b3;
-        }
+/* Hover effect for buttons */
+.btn:hover {
+    background-color: #0056b3;
+}
 
-        /* Style for the button container */
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+/* Container for Notes and DPP buttons */
+.btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
 
-        /* Fullscreen button specific style */
-        #fullscreen-btn {
-            margin-bottom: 20px;
-        }
-    </style>
+/* Fullscreen button styling */
+#fullscreen-btn {
+    display: none; /* Initially hidden */
+    margin-top: 20px;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    #iframe-container {
+        width: 100%;
+        height: 300px; /* Smaller height for smaller screens */
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    #iframe-container {
+        height: 250px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+
+    .btn-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
