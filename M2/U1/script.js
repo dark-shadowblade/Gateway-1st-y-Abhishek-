@@ -1,12 +1,10 @@
 async function fetchHTML() {
     try {
-        // Get lecture link from the HTML
         const baseLink = document.getElementById('lecture-link').href;
-
         const response = await fetch(baseLink);
         if (!response.ok) throw new Error('Failed to fetch HTML content');
-        const htmlText = await response.text();
 
+        const htmlText = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
@@ -23,46 +21,40 @@ async function fetchHTML() {
             const dataMatch = publinkDataScript.match(/var publinkData = ({.*?});/s);
             if (dataMatch && dataMatch[1]) {
                 const publinkData = JSON.parse(dataMatch[1]);
-                if (publinkData && publinkData.variants && publinkData.variants[0]) {
-                    const pathLink = publinkData.variants[0].path;
-                    const baseURL = 'https://p-def6.pcloud.com';
-                    const fullLink = baseURL + pathLink;
+                if (publinkData?.variants?.[0]?.path) {
+                    const fullLink = 'https://p-def6.pcloud.com' + publinkData.variants[0].path;
+
+                    const iframeContainer = document.getElementById('iframe-container');
+                    iframeContainer.innerHTML = ''; // Clear previous content
 
                     const iframe = document.createElement('iframe');
                     iframe.src = fullLink;
-                    document.getElementById('iframe-container').appendChild(iframe);
+                    iframeContainer.appendChild(iframe);
 
+                    // Show buttons
                     document.getElementById('fullscreen-btn').style.display = 'inline-block';
                     document.getElementById('notes-btn').style.display = 'inline-block';
                     document.getElementById('dpp-btn').style.display = 'inline-block';
 
-                    document.getElementById('fullscreen-btn').addEventListener('click', () => {
-                        if (iframe.requestFullscreen) {
-                            iframe.requestFullscreen();
-                        } else if (iframe.mozRequestFullScreen) {
-                            iframe.mozRequestFullScreen();
-                        } else if (iframe.webkitRequestFullscreen) {
-                            iframe.webkitRequestFullscreen();
-                        } else if (iframe.msRequestFullscreen) {
-                            iframe.msRequestFullscreen();
-                        }
-                    });
+                    // Fullscreen functionality
+                    document.getElementById('fullscreen-btn').onclick = () => iframe.requestFullscreen?.();
 
+                    // Handle button clicks (Notes and DPP)
                     document.querySelectorAll('.btn').forEach(button => {
-                        button.addEventListener('click', () => {
+                        button.onclick = () => {
                             const link = button.getAttribute('data-link');
                             if (link) window.open(link, '_blank');
-                        });
+                        };
                     });
 
                 } else {
-                    document.getElementById('path-link').textContent = 'Error: Path not found';
+                    throw new Error('Path not found in publinkData');
                 }
             } else {
-                document.getElementById('path-link').textContent = 'Error: Could not find publinkData object';
+                throw new Error('Could not find publinkData object');
             }
         } else {
-            document.getElementById('path-link').textContent = 'Error: publinkData script not found';
+            throw new Error('publinkData script not found');
         }
     } catch (error) {
         document.getElementById('path-link').textContent = 'Error: ' + error.message;
