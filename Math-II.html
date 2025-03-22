@@ -1,13 +1,163 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
-  <title>Hello, World!</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture Folders</title>
+  <style>
+    /* Reset default margin and padding */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .main-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .folder {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .folder h2 {
+      cursor: pointer;
+      font-size: 18px;
+      color: #2a7f5f;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding: 5px 0;
+      font-weight: bold;
+    }
+
+    .folder h2:hover {
+      color: #2a5b46;
+    }
+
+    .lectures {
+      list-style: none;
+      padding-left: 20px;
+      display: none; /* Initially hidden */
+    }
+
+    .lectures li {
+      margin-bottom: 8px;
+    }
+
+    .lectures a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .lectures a:hover {
+      color: #007BFF;
+      text-decoration: underline;
+    }
+
+    .lectures li a:active {
+      color: #0056b3;
+    }
+
+    /* Add a little spacing between units */
+    .folder + .folder {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>
-    Hello, World!
-  </h1>
+
+  <h1>Mechanical Units</h1>
+
+  <div class="main-content" id="unitsContainer">
+    <!-- Units will be dynamically populated -->
+  </div>
+
+  <script>
+    // Base path for lecture links
+    const basePath = 'M2/';
+
+    // Data structure for units and lectures
+    const units = [
+      { id: 'unit1', title: 'Ordinary Differential Equation of Higher Order', lectures: 5 },
+      { id: 'unit2', title: 'Laplace Transform', lectures: 5 },
+      { id: 'unit3', title: 'Sequence and Series', lectures: 5 },
+      { id: 'unit4', title: 'Complex Variable–Differentiation', lectures: 5 },
+      { id: 'unit5', title: 'Complex Variable –Integration', lectures: 5 }
+    ];
+
+    // Function to open a lecture
+    function openLecture(unit, lecture) {
+      // Convert unit like 'unit1' to 'U1', 'unit2' to 'U2', etc.
+      const unitCode = 'U' + unit.replace('unit', '').toUpperCase();
+      
+      const url = `${basePath}${unitCode}/L${String(lecture).padStart(2, '0')}.html`;
+      window.open(url, '_blank');
+    }
+
+    // Function to toggle lecture visibility
+    function toggleLectures(id) {
+      const lectureList = document.getElementById(id);
+      lectureList.style.display = lectureList.style.display === "none" ? "block" : "none";
+    }
+
+    // Dynamically render units and lectures
+    function renderUnits() {
+      const container = document.getElementById('unitsContainer');
+      units.forEach(unit => {
+        const unitDiv = document.createElement('div');
+        unitDiv.classList.add('folder');
+        unitDiv.id = unit.id;
+
+        // Unit title
+        const unitHeader = document.createElement('h2');
+        unitHeader.textContent = `${unit.title}`;
+        unitHeader.setAttribute('onclick', `toggleLectures('${unit.id}-lectures')`);
+        unitDiv.appendChild(unitHeader);
+
+        // Lecture list
+        const lectureList = document.createElement('ul');
+        lectureList.classList.add('lectures');
+        lectureList.id = `${unit.id}-lectures`;
+        lectureList.style.display = 'none';
+
+        // Add lectures to the list
+        for (let i = 1; i <= unit.lectures; i++) {
+          const lectureItem = document.createElement('li');
+          const lectureLink = document.createElement('a');
+          lectureLink.href = '#';
+          lectureLink.textContent = `Lecture ${i}`;
+          lectureLink.setAttribute('onclick', `openLecture('${unit.id}', ${i})`);
+          lectureItem.appendChild(lectureLink);
+          lectureList.appendChild(lectureItem);
+        }
+
+        unitDiv.appendChild(lectureList);
+        container.appendChild(unitDiv);
+      });
+    }
+
+    // Initialize the page
+    renderUnits();
+  </script>
+
 </body>
 </html>
