@@ -1,5 +1,5 @@
 // Define the subject (change this to update across all pages)
-const SUBJECT = "Maths-II";
+const SUBJECT = "Maths-II : Unit-1";
 
 // Update the subject name in the title and heading
 document.addEventListener("DOMContentLoaded", () => {
